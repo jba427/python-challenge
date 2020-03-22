@@ -12,10 +12,11 @@ csvpath = os.path.join('Resources', 'budget_data.csv')
 # initiate variables
 months = 0
 profit = 0
-# set to artificially low/high values, so first row will
-# automatically get seeded as max/min.
-maxprofitdollar = -999999999999
-minprofitdollar = 999999999999
+maxprofitdollar = 0
+minprofitdollar = 0
+
+currentmonthprofit = 0
+lastmonthprofit = 0
 
 # open csv file
 with open(csvpath, newline='') as csvfile:
@@ -31,22 +32,25 @@ with open(csvpath, newline='') as csvfile:
     for row in csvreader:
             # tally of number of months
             months += 1
-
+            
             # running total of profit/loss
             profit += int(row[1])
             
-            # compare current row to maxprofitdollar 
-            # if larger, this is new max month
-            if int(row[1]) > int(maxprofitdollar):
+            # set current month profit
+            currentmonthprofit = int(row[1])
+           
+            # compare month to month profits (for max)
+            if int(currentmonthprofit - lastmonthprofit) > int(maxprofitdollar):
                 maxprofitmonth = row[0]
-                maxprofitdollar = row[1]
+                maxprofitdollar = int(currentmonthprofit - lastmonthprofit)
 
-            # compare current row to minprofitdollar
-            # if less, this is the new min month
-            if int(row[1]) < int(minprofitdollar):
+            # compare month to month profits (for min)
+            if int(currentmonthprofit - lastmonthprofit) < int(minprofitdollar):
                 minprofitmonth = row[0]
-                minprofitdollar = row[1]
+                minprofitdollar = int(currentmonthprofit - lastmonthprofit)
 
+            lastmonthprofit = int(row[1])
+            
     # calculate average monthly profit
     averageprofit = profit / months
 
@@ -56,8 +60,8 @@ with open(csvpath, newline='') as csvfile:
     print ("Total Months: " + str(months))
     print ("Total: ${0:<12,.0f}".format(profit))
     print ("Average Change: ${0:<12,.2f}".format(averageprofit))
-    print ("Greatest Increase in Profits: "  + maxprofitmonth + " ($" + maxprofitdollar + ")")
-    print ("Greatest Decrease in Profits: "  + minprofitmonth + " ($" + minprofitdollar + ")")
+    print ("Greatest Increase in Profits: "  + maxprofitmonth + " ($" + str(maxprofitdollar) + ")")
+    print ("Greatest Decrease in Profits: "  + minprofitmonth + " ($" + str(minprofitdollar) + ")")
 
 # Push the output to a text file
 with open("financial_analysis.txt", "w") as f:
@@ -66,6 +70,6 @@ with open("financial_analysis.txt", "w") as f:
     print ("Total Months: " + str(months), file=f)
     print ("Total: ${0:<12,.0f}".format(profit), file=f)
     print ("Average Change: ${0:<12,.2f}".format(averageprofit), file=f)
-    print ("Greatest Increase in Profits: "  + maxprofitmonth + " ($" + maxprofitdollar + ")", file=f)
-    print ("Greatest Decrease in Profits: "  + minprofitmonth + " ($" + minprofitdollar + ")", file=f)
+    print ("Greatest Increase in Profits: "  + maxprofitmonth + " ($" + str(maxprofitdollar) + ")", file=f)
+    print ("Greatest Decrease in Profits: "  + minprofitmonth + " ($" + str(minprofitdollar) + ")", file=f)
     
