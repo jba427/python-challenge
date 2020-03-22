@@ -64,9 +64,9 @@ with open("election_results.txt", "w") as f:
     for candidate in votedict:
         candidatepct = votedict[candidate]/totalvotes*100
         print (candidate + ": {0:<2,.3f}".format(candidatepct) + "% (" + str(votedict[candidate]) + ")", file=f)
-        if votedict[candidate] > maxvotes:
-            maxvotes = votedict[candidate]
-            winner = candidate
+        # if votedict[candidate] > maxvotes:
+        #     maxvotes = votedict[candidate]
+        #     winner = candidate
     print ("--------------------", file=f)
     print ("Winner: " + winner, file=f)
     print ("--------------------", file=f)
