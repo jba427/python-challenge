@@ -17,6 +17,8 @@ minprofitdollar = 0
 
 currentmonthprofit = 0
 lastmonthprofit = 0
+averagemonthtally = 0
+averagemonthpl = 0
 
 # open csv file
 with open(csvpath, newline='') as csvfile:
@@ -49,17 +51,28 @@ with open(csvpath, newline='') as csvfile:
                 minprofitmonth = row[0]
                 minprofitdollar = int(currentmonthprofit - lastmonthprofit)
 
-            lastmonthprofit = int(row[1])
+            if lastmonthprofit != 0:
+                #find profit/loss between this month and last month
+                averagemonthtally += 1
+                averagemonthpl += (currentmonthprofit - lastmonthprofit)
+                #print("current month: " + str(currentmonthprofit) + "   last month: " + str(lastmonthprofit))
             
+            lastmonthprofit = int(row[1])
+
     # calculate average monthly profit
     averageprofit = profit / months
+    
+    print ("average month pl: " + str(averagemonthpl))
+    print ("tally :" + str(averagemonthtally))
+
+    averagemonthpl = averagemonthpl / averagemonthtally
 
     # Display output to screen
     print ("Financial Analysis")
     print ("------------------")
     print ("Total Months: " + str(months))
     print ("Total: ${0:<12,.0f}".format(profit))
-    print ("Average Change: ${0:<12,.2f}".format(averageprofit))
+    print ("Average change: ${0:<12,.2f}".format(averagemonthpl))
     print ("Greatest Increase in Profits: "  + maxprofitmonth + " ($" + str(maxprofitdollar) + ")")
     print ("Greatest Decrease in Profits: "  + minprofitmonth + " ($" + str(minprofitdollar) + ")")
 
@@ -69,7 +82,7 @@ with open("financial_analysis.txt", "w") as f:
     print ("------------------", file=f)
     print ("Total Months: " + str(months), file=f)
     print ("Total: ${0:<12,.0f}".format(profit), file=f)
-    print ("Average Change: ${0:<12,.2f}".format(averageprofit), file=f)
+    print ("Average change: ${0:<12,.2f}".format(averagemonthpl), file=f)
     print ("Greatest Increase in Profits: "  + maxprofitmonth + " ($" + str(maxprofitdollar) + ")", file=f)
     print ("Greatest Decrease in Profits: "  + minprofitmonth + " ($" + str(minprofitdollar) + ")", file=f)
     
